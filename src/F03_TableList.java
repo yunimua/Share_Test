@@ -3,7 +3,7 @@ import baseSettings.PosFrame;
 public class F03_TableList extends PosFrame {
 
 	/*
-		ÁÖ¹®¹ŞÀº Á¤º¸ Å×ÀÌºí ÇüÅÂ·Î Ç¥½Ã.
+		í…Œì´ë¸” ë¦¬ìŠ¤íŠ¸
 	*/
 	public F03_TableList() {
 		super();
