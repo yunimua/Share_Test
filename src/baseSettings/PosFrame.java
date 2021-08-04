@@ -10,7 +10,9 @@ public class PosFrame extends JFrame {
 		setSize(1300,800);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); 
 		setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false); 
 		setVisible(true); 
+		
 	}
 }

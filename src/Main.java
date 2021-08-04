@@ -11,7 +11,6 @@ public class Main extends PosFrame {
  		모든 화면들을 띄워줄 기본 프래임
 	*/
 	
-	private ArrayList<JButton> menuBtns;
 	public Main() {
 		super();
 
