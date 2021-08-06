@@ -8,12 +8,12 @@ import javax.swing.table.*;
 import baseSettings.*;
 import net.sourceforge.jdatepicker.impl.*;
 
-public class ManagerSales extends PosFrame {
+public class ManagerSales0 extends PosFrame {
 	
 	private JSplitPane jsp = new JSplitPane();
 	private JScrollPane scrollpane;
 
-	public ManagerSales() {
+	public ManagerSales0() {
 		super();
 		setTB();
 		init();
@@ -24,18 +24,15 @@ public class ManagerSales extends PosFrame {
 		String sql = "SELECT receipt_no, "
 				+ "to_char(datetime, 'YYYY/MM/DD HH24:MI:SS') AS dtime, "
 				+ "total, "
-				+ "credit, "
-				+ "cash, "
+				+ "payment, "
 				+ "cus_no, "
 				+ "point_used, "
 				+ "point_saved, "
-				+ "state, "
-				+ "receipt_chk "
+				+ "state "
 				+ "FROM history_payment "
 				+ "WHERE state = 'complete'";
 		
-		String header[] = {"No", "결제일자", "결제금액", "현금결제","카드결제", "멤버쉽번호", 
-						"차감포인트", "적립포인트", "결제상태", "현금영수증(Y/N)"};
+		String header[] = {"No", "결제일자", "결제금액", "결제방식", "멤버쉽번호", "차감포인트", "적립포인트", "결제상태"};
 		DefaultTableModel model = new DefaultTableModel(header, 0);
 	    try (
 	    	Connection conn = DBConnector.getConnection();
@@ -47,16 +44,13 @@ public class ManagerSales extends PosFrame {
 				int receipt_no = rs.getInt("receipt_no");
 				String dtime = rs.getString("dtime");
 				int total = rs.getInt("total");
-				int credit = rs.getInt("credit");
-				int cash = rs.getInt("cash");
+				String payment = rs.getString("payment");
 				int cus_no = rs.getInt("cus_no");
 				int point_used = rs.getInt("point_used");
 				int point_saved = rs.getInt("point_saved");
 				String state = rs.getString("state");
-				String receipt_chk = rs.getString("receipt_chk");
 				
-				Object data[] = {receipt_no, dtime, total, credit, cash, cus_no, 
-							point_used, point_saved, state, receipt_chk};
+				Object data[] = {receipt_no, dtime, total, payment, cus_no, point_used, point_saved, state};
 				model.addRow(data);
 			}
 
@@ -72,13 +66,11 @@ public class ManagerSales extends PosFrame {
 		colModel.getColumn(0).setPreferredWidth(30);
 		colModel.getColumn(1).setPreferredWidth(150);
 		colModel.getColumn(2).setPreferredWidth(100);
-		colModel.getColumn(3).setPreferredWidth(50);
+		colModel.getColumn(3).setPreferredWidth(100);
 		colModel.getColumn(4).setPreferredWidth(50);
 		colModel.getColumn(5).setPreferredWidth(50);
 		colModel.getColumn(6).setPreferredWidth(50);
 		colModel.getColumn(7).setPreferredWidth(50);
-		colModel.getColumn(8).setPreferredWidth(100);
-		colModel.getColumn(9).setPreferredWidth(50);
 	
 		scrollpane = new JScrollPane(tb);
 		
@@ -144,21 +136,14 @@ public class ManagerSales extends PosFrame {
 		// 왼쪽 구성요소 추가
 		jsp.setLeftComponent(p1);
 		
-		//기존 버튼 추가 부분
-//		ArrayList<JButton> btns = new ArrayList<>();
-//		btns.add(new JButton("매출 현황"));
-//		btns.add(new JButton("마감 용지 출력"));
-//		btns.add(new JButton("직원 등록"));
-//		btns.add(new JButton("출퇴근 기록 열람"));
-//		btns.add(new JButton("메뉴 관리"));
-//		for(JButton btn : btns) {
-//			p2.add(btn);
-//		}
-		
-		// Manager_Btns class에서 불러온 형태로 추가해봄..(여기만 변경해서 적용해봄)
-		Manager_Btns mb = new Manager_Btns();
-		for (JButton btns : mb.getJBtns()) {
-			p2.add(btns);
+		ArrayList<JButton> btns = new ArrayList<>();
+		btns.add(new JButton("매출 현황"));
+		btns.add(new JButton("마감 용지 출력"));
+		btns.add(new JButton("직원 등록"));
+		btns.add(new JButton("출퇴근 기록 열람"));
+		btns.add(new JButton("메뉴 관리"));
+		for(JButton btn : btns) {
+			p2.add(btn);
 		}
 		
 		// 오른쪽 구성요소 추가
@@ -167,7 +152,7 @@ public class ManagerSales extends PosFrame {
 	}
 	
 	public static void main(String[] args) {
-		ManagerSales frame = new ManagerSales();
+		ManagerSales0 frame = new ManagerSales0();
 		frame.setDefaultOptions();
 	}
 }
