@@ -1,13 +1,35 @@
 package manager;
-import java.awt.*;
-import java.sql.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
-import baseSettings.*;
-import net.sourceforge.jdatepicker.impl.*;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import baseSettings.DBConnector;
+import baseSettings.PosFrame;
 
 public class ManagerSales extends PosFrame {
 	
@@ -33,9 +55,10 @@ public class ManagerSales extends PosFrame {
 				+ "state, "
 				+ "receipt_chk "
 				+ "FROM history_payment "
-				+ "WHERE state = 'complete'";
+				+ "WHERE state = 'complete' "
+				+ "ORDER BY receipt_no ";
 		
-		String header[] = {"No", "결제일자", "결제금액", "현금결제","카드결제", "멤버쉽번호", 
+		String header[] = {"No", "결제일자", "총 금액", "현금결제","카드결제", "멤버쉽번호", 
 						"차감포인트", "적립포인트", "결제상태", "현금영수증(Y/N)"};
 		DefaultTableModel model = new DefaultTableModel(header, 0);
 	    try (
@@ -72,23 +95,22 @@ public class ManagerSales extends PosFrame {
 		TableColumnModel colModel = tb.getColumnModel();
 		colModel.getColumn(0).setPreferredWidth(30);
 		colModel.getColumn(1).setPreferredWidth(150);
-		colModel.getColumn(2).setPreferredWidth(100);
-		colModel.getColumn(3).setPreferredWidth(50);
-		colModel.getColumn(4).setPreferredWidth(50);
-		colModel.getColumn(5).setPreferredWidth(50);
-		colModel.getColumn(6).setPreferredWidth(50);
-		colModel.getColumn(7).setPreferredWidth(50);
-		colModel.getColumn(8).setPreferredWidth(100);
-		colModel.getColumn(9).setPreferredWidth(50);
+		colModel.getColumn(2).setPreferredWidth(80);
+		colModel.getColumn(3).setPreferredWidth(60);
+		colModel.getColumn(4).setPreferredWidth(60);
+		colModel.getColumn(5).setPreferredWidth(60);
+		colModel.getColumn(6).setPreferredWidth(60);
+		colModel.getColumn(7).setPreferredWidth(60);
+		colModel.getColumn(8).setPreferredWidth(60);
+		colModel.getColumn(9).setPreferredWidth(100);
 	
 		scrollpane = new JScrollPane(tb);
 		
 		// JTable Column 가운데 정렬
 		DefaultTableCellRenderer cr = new DefaultTableCellRenderer();
 		cr.setHorizontalAlignment(SwingConstants.CENTER);
-		TableColumnModel cm = tb.getColumnModel();
-		for (int i = 0; i < cm.getColumnCount(); i++) {
-			cm.getColumn(i).setCellRenderer(cr);
+		for (int i = 0; i < colModel.getColumnCount(); i++) {
+			colModel.getColumn(i).setCellRenderer(cr);
 		}
 	}
 	
@@ -104,7 +126,7 @@ public class ManagerSales extends PosFrame {
 		JPanel p3 = new JPanel(new FlowLayout());
 		
 		// 매출 합계 구성패널 추가
-		JPanel p4 = new JPanel();
+		JPanel p4 = new JPanel(new GridLayout(3, 2));
 		p4.setPreferredSize(new Dimension(0, 140));
 		p4.setBackground(new Color(0xD7E7F7));
 		
@@ -112,19 +134,24 @@ public class ManagerSales extends PosFrame {
 		TotalLabel tl = new TotalLabel();
 		for (JLabel labels : tl.getLabels()) {
 			p4.add(labels);
-		}
-  
+		}    
 	    // 매출합계 패널 아래쪽에 붙이기
 	 	p1.add(p4, BorderLayout.SOUTH);
 		
-		// 달력 출력
-		UtilDateModel model = new UtilDateModel();
-		JDatePanelImpl datePanel = new JDatePanelImpl(model);
-		JDatePickerImpl datePicker1 = new JDatePickerImpl(datePanel);
-		JDatePickerImpl datePicker2 = new JDatePickerImpl(datePanel);
+	    // 달력 출력
+ 		Properties p = new Properties();
+ 		p.put("text.today", "Today");
+ 		p.put("text.month", "Month");
+ 		p.put("text.year", "Year");
+ 		UtilDateModel model1 = new UtilDateModel();
+ 		JDatePanelImpl datePanel = new JDatePanelImpl(model1, p);
+ 		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+ 		UtilDateModel model2 = new UtilDateModel();
+ 		JDatePanelImpl datePanel2 = new JDatePanelImpl(model2, p);
+ 		JDatePickerImpl datePicker2 = new JDatePickerImpl(datePanel2, new DateLabelFormatter());
 
 		// p3에 달력 ~ 달력 조회버튼 추가
-		p3.add(datePicker1);
+		p3.add(datePicker);
 		p3.add(new JLabel("~"));
 		p3.add(datePicker2);
 		p3.add(new JButton("조회"));
@@ -136,7 +163,7 @@ public class ManagerSales extends PosFrame {
 		// 왼쪽 구성요소 추가
 		jsp.setLeftComponent(p1);
 		
-		// Manager_Btns class에서 불러온 형태로 추가해봄..(여기만 변경해서 적용해봄)
+		// Manager_Btns 으로 버튼 추가
 		Manager_Btns mb = new Manager_Btns();
 		for (JButton btns : mb.getJBtns()) {
 			p2.add(btns);
@@ -152,3 +179,5 @@ public class ManagerSales extends PosFrame {
 		frame.setDefaultOptions();
 	}
 }
+
+
