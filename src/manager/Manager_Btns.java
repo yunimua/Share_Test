@@ -16,8 +16,6 @@ public class Manager_Btns extends JButton {
 		btns.add(new JButton() {
 			{
 			setText("매출 현황");
-//			setLocation(1080,50);
-//			setSize(160, 110);
 			setFont(new Font("default", Font.BOLD, 16));
 			setBackground(new Color(0xD7E7F7));
 			}
@@ -26,8 +24,6 @@ public class Manager_Btns extends JButton {
 		btns.add(new JButton() {
 			{
 			setText("마감 용지 출력");
-//			setLocation(1080,190);
-//			setSize(160, 110);
 			setFont(new Font("default", Font.BOLD, 16));
 			setBackground(new Color(0xD7E7F7));
 			}
@@ -36,8 +32,6 @@ public class Manager_Btns extends JButton {
 		btns.add(new JButton() {
 			{
 			setText("직원 등록");
-//			setLocation(1080,320);
-//			setSize(160, 110);
 			setFont(new Font("default", Font.BOLD, 16));
 			setBackground(new Color(0xD7E7F7));
 			}
@@ -46,8 +40,6 @@ public class Manager_Btns extends JButton {
 		btns.add(new JButton() {
 			{
 			setText("출퇴근 기록 열람");
-//			setLocation(1080,460);
-//			setSize(160, 110);
 			setFont(new Font("default", Font.BOLD, 16));
 			setBackground(new Color(0xD7E7F7));
 			}
@@ -56,8 +48,6 @@ public class Manager_Btns extends JButton {
 		btns.add(new JButton() {
 			{
 			setText("메뉴 관리");
-//			setLocation(1080,600);
-//			setSize(160, 110);
 			setFont(new Font("default", Font.BOLD, 16));
 			setBackground(new Color(0xD7E7F7));
 			}

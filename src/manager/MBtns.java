@@ -5,11 +5,11 @@ import java.util.*;
 import javax.swing.*;
 
 // 관리자메뉴 버튼 5개 위치, 크기 설정
-public class Manager_Btn extends JButton {
+public class MBtns extends JButton {
 
 	private ArrayList<JButton> btns;
 	
-	public Manager_Btn() {
+	public MBtns() {
 		btns = new ArrayList<>();	
 		
 		// 각각의 버튼 이름, 위치, 크기, 폰트, 버튼배경색을 설정
