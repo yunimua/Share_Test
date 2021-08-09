@@ -33,12 +33,14 @@ public class ManagerPage extends PosFrame {
 	
 	private JSplitPane jsp = new JSplitPane();
 	private JScrollPane scrollpane;
-	private String sql = "SELECT a_no, emp_no, name, emp_degree, "
-			+ "TO_CHAR(start_work, 'YYYY/MM/DD HH24:MI:SS') AS stime, "
-			+ "TO_CHAR(fin_work, 'YYYY/MM/DD HH24:MI:SS') AS ftime, "
-			+ "round((fin_work - start_work) * 24) AS wtime, "
-			+ "TO_CHAR(start_date, 'YYYY/MM/DD') AS swork "
-			+ "FROM absent_info INNER JOIN employees_info  USING (emp_no)";
+//	private String sql = "SELECT a_no, emp_no, name, emp_degree, "
+//			+ "TO_CHAR(start_work, 'YYYY/MM/DD HH24:MI:SS') AS stime, "
+//			+ "TO_CHAR(fin_work, 'YYYY/MM/DD HH24:MI:SS') AS ftime, "
+//			+ "round((fin_work - start_work) * 24) AS wtime, "
+//			+ "TO_CHAR(start_date, 'YYYY/MM/DD') AS swork "
+//			+ "FROM absent_info INNER JOIN employees_info  USING (emp_no)";
+	
+	private String sql = "SELECT * FROM payment_ab";
 	private JTable tb;
 	private DefaultTableModel model;
 	private JButton selBtn = new JButton("조회");
@@ -131,8 +133,8 @@ public class ManagerPage extends PosFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				date_s = "TO_DATE('" + datePicker.getJFormattedTextField().getText() + "', 'YYYY/MM/DD')";
-				date_e = "TO_DATE('" + datePicker2.getJFormattedTextField().getText() + "', 'YYYY/MM/DD')";
+				date_s = "TO_DATE('" + datePicker.getJFormattedTextField().getText() + "', 'YYYY/MM/DD HH24:MI:SS')";
+				date_e = "TO_DATE('" + datePicker2.getJFormattedTextField().getText() + "', 'YYYY/MM/DD HH24:MI:SS')";
 				sql = "SELECT a_no, emp_no, name, emp_degree, "
 						+ "TO_CHAR(start_work, 'YYYY/MM/DD HH24:MI:SS') AS stime, "
 						+ "TO_CHAR(fin_work, 'YYYY/MM/DD HH24:MI:SS') AS ftime, "
