@@ -1,11 +1,12 @@
-package manager;
+package manager_file;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
 
-// 관리자메뉴 버튼 5개 위치, 크기 설정
+// 관리자메뉴 버튼 5개 설정
 public class Manager_Btns extends JButton {
 
 	private ArrayList<JButton> btns;
@@ -28,7 +29,7 @@ public class Manager_Btns extends JButton {
 		btns.get(3).setText("출퇴근 기록 열람");
 		btns.get(4).setText("메뉴 관리");
 		
-		btns.get(1).addActionListener(new ActionBtns());
+		btns.get(1).addActionListener(new ClosingBtn());
 
 	}
 	

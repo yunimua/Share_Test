@@ -1,4 +1,4 @@
-package manager;
+package manager_file;
 
 import java.awt.*;
 import java.sql.*;
@@ -50,7 +50,6 @@ public class TotalLabel extends JLabel {
 					labels.get(3).setText(""+ fm.format(dsum) + "원　");
 					labels.get(4).setText("▶ cafe 매출 총 합계 ◀");
 					labels.get(5).setText("" + fm.format(total) + "원　");
-					System.out.println("현금: " + hsum + "카드: " + dsum + "총합: " + total);
 				}
 
 			} catch (SQLException e) {
