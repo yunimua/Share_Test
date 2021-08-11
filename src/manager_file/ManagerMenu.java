@@ -26,7 +26,6 @@ import javax.swing.table.TableColumnModel;
 import baseSettings.DBConnector;
 import baseSettings.PosFrame;
 
-// 메뉴관리
 public class ManagerMenu extends PosFrame {
 	
 	private JSplitPane jsp = new JSplitPane();

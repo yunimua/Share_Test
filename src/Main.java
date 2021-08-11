@@ -1,7 +1,7 @@
 import javax.swing.*;
 
 import baseSettings.PosFrame;
-import manager.*;
+import manager_file.*;
 
 public class Main extends PosFrame {
 
