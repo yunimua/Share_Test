@@ -1,14 +1,15 @@
+package manager;
 import java.awt.*;
 import java.util.*;
 
 import javax.swing.*;
 
 // 관리자메뉴 버튼 5개 위치, 크기 설정
-public class Manager_Btns extends JButton {
+public class MBtns extends JButton {
 
 	private ArrayList<JButton> btns;
 	
-	public Manager_Btns() {
+	public MBtns() {
 		btns = new ArrayList<>();	
 		
 		// 각각의 버튼 이름, 위치, 크기, 폰트, 버튼배경색을 설정
@@ -55,9 +56,9 @@ public class Manager_Btns extends JButton {
 		btns.add(new JButton() {
 			{
 			setText("메뉴 관리");
-			setFont(new Font("default", Font.BOLD, 16));
 			setLocation(1080,600);
 			setSize(160, 110);
+			setFont(new Font("default", Font.BOLD, 16));
 			setBackground(new Color(0xCED8F6));
 			}
 		});
