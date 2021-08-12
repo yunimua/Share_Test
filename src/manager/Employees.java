@@ -11,10 +11,7 @@ import baseSettings.*;
 public class Employees {
 	
 	private ArrayList<EmployeesInfo> list;
-	private ArrayList<JButton> listBtn;
 	private String sql = "SELECT * FROM employees_info";
-	private String header[] = {"사번", "이름", "연락처", "입사일자", "직급"};
-	//static int value;
 	
 	public Employees() {
 		super();
