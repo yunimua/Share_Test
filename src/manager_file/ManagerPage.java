@@ -1,9 +1,5 @@
 package manager_file;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -12,8 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -44,6 +42,7 @@ public class ManagerPage extends PosFrame {
 	private JButton selBtn = new JButton("조회");
 	private String header[] = {"No", "사번", "이름", "직위", "출근시간", "퇴근시간", "근무시간", "근무시작일"};
 	private String date_s, date_e;
+	final public static int MAX_BUTTON = 6; // 우측 버튼 총 개수
 	
 	public ManagerPage() {
 		super();
@@ -63,19 +62,22 @@ public class ManagerPage extends PosFrame {
 	    	PreparedStatement pstmt = conn.prepareStatement(sql);
 	    	ResultSet rs = pstmt.executeQuery();
 	    	){
-	    	
-			while(rs.next()) {
-				int a_no = rs.getInt("a_no");
-				int emp_no = rs.getInt("emp_no");
-				String name = rs.getString("name");
-				String emp_degree = rs.getString("emp_degree");
-				String start_work = rs.getString("start_work");
-				String fin_work = rs.getString("fin_work");
-				int worked_time = rs.getInt("wtime");
-				String start_date = rs.getString("swork");
-				Object data[] = {a_no, emp_no, name, emp_degree, start_work, fin_work, worked_time, start_date};
-				model.addRow(data);
-			}
+	    	if(rs.next()) {
+				while(rs.next()) {
+					int a_no = rs.getInt("a_no");
+					int emp_no = rs.getInt("emp_no");
+					String name = rs.getString("name");
+					String emp_degree = rs.getString("emp_degree");
+					String start_work = rs.getString("start_work");
+					String fin_work = rs.getString("fin_work");
+					int worked_time = rs.getInt("wtime");
+					String start_date = rs.getString("swork");
+					Object data[] = {a_no, emp_no, name, emp_degree, start_work, fin_work, worked_time, start_date};
+					model.addRow(data);
+				}
+	    	} else {
+	    		JOptionPane.showMessageDialog(this, "조회 결과가 없습니다.");
+	    	}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +90,7 @@ public class ManagerPage extends PosFrame {
 		tb = new JTable(model);
 		tb.setFont(new Font("", Font.PLAIN, 14));
 		JTableHeader tbheader = tb.getTableHeader();
-		tbheader.setFont(new Font("", Font.PLAIN, 15));
+		tbheader.setFont(new Font("", Font.BOLD, 15));
 		TableColumnModel colModel = tb.getColumnModel();
 		colModel.getColumn(0).setPreferredWidth(40);
 		colModel.getColumn(1).setPreferredWidth(50);
@@ -101,12 +103,15 @@ public class ManagerPage extends PosFrame {
 	
 		scrollpane = new JScrollPane(tb);
 		
-		jsp.setResizeWeight(0.9);
+		tbheader.setBackground(new Color(0xEFF8FB)); // Header 컬러 설정
+		jsp.setResizeWeight(1.0);
+		jsp.setEnabled(false); // 테이블 <> 버튼 사이에 사이즈 조정 불가능하게 설정
+		
 		Container con = this.getContentPane();
 		con.setLayout(new BorderLayout());
 
 		JPanel p1  = new JPanel(new BorderLayout());
-		JPanel p2 = new JPanel(new GridLayout(5, 1));
+		JPanel p2 = new JPanel(new GridLayout(MAX_BUTTON, 1));
 		JPanel p3 = new JPanel(new FlowLayout());
 		
 		// 달력 출력
@@ -147,6 +152,17 @@ public class ManagerPage extends PosFrame {
 		p1.add(scrollpane, BorderLayout.CENTER);
 		p1.setBorder(null);
 		
+		JPanel south = new JPanel(new GridLayout(1,2));
+		
+		Employees_List el = new Employees_List();
+		ImageIcon image = new ImageIcon("image/coffee.png");
+		JLabel south_left = new JLabel(image);
+		south.setBackground(new Color(0xD7E7F7)); // 이미지 배경색 설정
+		
+		south.add(south_left);
+		south.add(el);
+		p1.add(south, "South");
+		
 		// 왼쪽 구성요소 추가
 		jsp.setLeftComponent(p1);
 		
@@ -156,7 +172,7 @@ public class ManagerPage extends PosFrame {
 			
 //		    btn.setBackground(new Color(0x66CCFF));
 
-		Manager_Btns mb = new Manager_Btns();
+		Manager_Btns mb = new Manager_Btns(this);
 		for (JButton btns : mb.getJBtns()) {
 			p2.add(btns);
 		}
@@ -166,8 +182,8 @@ public class ManagerPage extends PosFrame {
 		con.add("Center", jsp);
 	}
 	
-	public static void main(String[] args) {
-		ManagerPage mp = new ManagerPage();
-		mp.setDefaultOptions();
-	}
+//	public static void main(String[] args) {
+//		ManagerPage mp = new ManagerPage();
+//		mp.setDefaultOptions();
+//	}
 }

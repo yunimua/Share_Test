@@ -13,12 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
@@ -31,7 +26,7 @@ import baseSettings.DBConnector;
 import baseSettings.PosFrame;
 // 매출현황
 public class ManagerSales extends PosFrame {
-	
+	// JSplitPane : 컴포넌트 분할
 	private JSplitPane jsp = new JSplitPane();
 	private JScrollPane scrollpane;
 	
@@ -47,6 +42,8 @@ public class ManagerSales extends PosFrame {
 	private String header[] = {"No", "결제일자", "총 금액", "현금결제","카드결제", "멤버쉽번호", 
 			"차감포인트", "적립포인트", "결제상태", "현금영수증(Y/N)"};
 	private String date_s, date_e;
+	final public static int MAX_BUTTON = 6;
+	
 	public ManagerSales() {
 		super();
 		init();
@@ -63,22 +60,25 @@ public class ManagerSales extends PosFrame {
 	    	PreparedStatement pstmt = conn.prepareStatement(sql);
 	    	ResultSet rs = pstmt.executeQuery();
 	    	){
-	    	
-			while(rs.next()) {
-				int receipt_no = rs.getInt("receipt_no");
-				String dtime = rs.getString("dtime");
-				int total = rs.getInt("total");
-				int credit = rs.getInt("credit");
-				int cash = rs.getInt("cash");
-				int cus_no = rs.getInt("cus_no");
-				int point_used = rs.getInt("point_used");
-				int point_saved = rs.getInt("point_saved");
-				String state = rs.getString("state");
-				String receipt_chk = rs.getString("receipt_chk");
-				
-				Object data[] = {receipt_no, dtime, total, credit, cash, cus_no, 
-							point_used, point_saved, state, receipt_chk};
-				model.addRow(data);
+	    	if(rs.next()) {
+				while(rs.next()) {
+					int receipt_no = rs.getInt("receipt_no");
+					String dtime = rs.getString("dtime");
+					int total = rs.getInt("total");
+					int credit = rs.getInt("credit");
+					int cash = rs.getInt("cash");
+					int cus_no = rs.getInt("cus_no");
+					int point_used = rs.getInt("point_used");
+					int point_saved = rs.getInt("point_saved");
+					String state = rs.getString("state");
+					String receipt_chk = rs.getString("receipt_chk");
+					
+					Object data[] = {receipt_no, dtime, total, credit, cash, cus_no, 
+								point_used, point_saved, state, receipt_chk};
+					model.addRow(data);
+				}
+			} else {
+				JOptionPane.showMessageDialog(this, "조회 결과가 없습니다.");
 			}
 
 		} catch (SQLException e) {
@@ -108,13 +108,15 @@ public class ManagerSales extends PosFrame {
 	
 		scrollpane = new JScrollPane(tb);
 
-		//우측버튼 너비
-		jsp.setResizeWeight(0.9);
+		tbheader.setBackground(new Color(0xEFF8FB)); // Header 컬러 설정
+		jsp.setResizeWeight(1.0); //우측버튼 너비
+		jsp.setEnabled(false); // 테이블 <> 버튼 사이에 사이즈 조정 불가능하게 설정
+		
 		Container con = this.getContentPane();
 		con.setLayout(new BorderLayout());
 
 		JPanel p1  = new JPanel(new BorderLayout());
-		JPanel p2 = new JPanel(new GridLayout(5, 1));
+		JPanel p2 = new JPanel(new GridLayout(MAX_BUTTON, 1));
 		JPanel p3 = new JPanel(new FlowLayout());
 		
 		// 매출 합계 구성패널 추가
@@ -122,7 +124,7 @@ public class ManagerSales extends PosFrame {
 		p4.setPreferredSize(new Dimension(0, 140));
 		p4.setBackground(new Color(0xD7E7F7));
 		
-		// 매출 합계 라벨 추가 ※ 수정한 부분
+		// 매출 합계 라벨로 추가
 		TotalLabel tl = new TotalLabel();
 		for (JLabel labels : tl.getLabels()) {
 			p4.add(labels);
@@ -148,8 +150,9 @@ public class ManagerSales extends PosFrame {
 		p3.add(datePicker2);
 		p3.add(selBtn);
 		
+		// 달력에서 '조회' 버튼 눌렀을 때의 동작 설정
 		selBtn.addActionListener(new ActionListener() {
-			
+			// 선택한 날짜가 입력되어 데이터 검색 값을 불러오도록 설정
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				date_s = "TO_DATE('" + datePicker.getJFormattedTextField().getText() + "', 'YYYY/MM/DD')";
@@ -163,32 +166,33 @@ public class ManagerSales extends PosFrame {
 						+ date_s + " AND " + date_e + " + 1 "
 						+ "ORDER BY receipt_no ";
 				setTB();
-				
+				// 매출 합계를 선택한 기간에 맞게 데이터를 조회하여 노출
 				tl.updateDB(date_s, date_e);
 			}
 		});
  		
+		// p3: 달력 조회 기능 부분을 왼쪽 상단에 추가, scrollpane: 테이블 리스트에 스크롤되도록 설정
 		p1.add(p3, BorderLayout.NORTH);
 		p1.add(scrollpane, BorderLayout.CENTER);
-		p1.setBorder(null);
+		//p1.setBorder(null);
 		
-		// 왼쪽 구성요소 추가
+		// 왼쪽 구성요소 추가 (달력, 테이블 리스트, 매출합계)
 		jsp.setLeftComponent(p1);
 		
 		// Manager_Btns 으로 버튼 추가
-		Manager_Btns mb = new Manager_Btns();
+		Manager_Btns mb = new Manager_Btns(this);
 		for (JButton btns : mb.getJBtns()) {
 			p2.add(btns);
 		}
 		
-		// 오른쪽 구성요소 추가
+		// 오른쪽 구성요소 추가 (관리자버튼 5종)
 		jsp.setRightComponent(p2);
 		con.add("Center", jsp);
 	}
 	
-	public static void main(String[] args) {
-		ManagerSales frame = new ManagerSales();
-		frame.setDefaultOptions();
-	}
+//	public static void main(String[] args) {
+//		ManagerSales frame = new ManagerSales();
+//		frame.setDefaultOptions();
+//	}
 }
 
