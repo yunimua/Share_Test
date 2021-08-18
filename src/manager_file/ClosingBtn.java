@@ -33,10 +33,10 @@ public class ClosingBtn implements ActionListener {
 		JOptionPane end = new JOptionPane();				
 		Font f1 = new Font("", Font.BOLD, 15);
 		UIManager.put("OptionPane.messageFont", f1);
-		UIManager.put("OptionPane.minimumSize",new Dimension(200,100)); 
+		UIManager.put("OptionPane.minimumSize",new Dimension(220,100)); 
 		sumDB();
 		end.showMessageDialog(null, "[ " + dateFormat2.format(showdate)+ " ]" 
-				+ "\n마감 용지 출력이 완료되었습니다.", "마감 용지 출력", JOptionPane.PLAIN_MESSAGE);
+					+ "\n마감 용지 출력이 완료되었습니다.", "마감 용지 출력", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	// 매출 합계 DB 불러오기 후 txt 파일에 저장
@@ -52,6 +52,7 @@ public class ClosingBtn implements ActionListener {
 			dir.mkdir();
 		}
 		
+		// sales 폴더안에 출력한 로컬 날짜로 파일을 저장
 		File f = new File("sales/"+ dateFormat1.format(savedate) + ".txt");
 		
 		try (
@@ -78,6 +79,7 @@ public class ClosingBtn implements ActionListener {
 				out.write(""+ card + " 원\n");
 				out.write("▶ cafe 매출 총 합계 ◀ ");
 				out.write(""+ total + " 원");
+				out.close();
 			}
 			System.out.println("매출 전표 저장 완료 " + dateFormat2.format(showdate));
 

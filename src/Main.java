@@ -1,7 +1,4 @@
-import javax.swing.*;
-
 import baseSettings.PosFrame;
-import manager_file.*;
 
 public class Main extends PosFrame {
 
@@ -10,12 +7,6 @@ public class Main extends PosFrame {
 	 */
 	public Main() {
 		super();
-		setLayout(null);
-		
-		Manager_Btns mb = new Manager_Btns();
-		for(JButton btns : mb.getJBtns()) {
-			add(btns);
-		}
 		
 	}
 	

@@ -1,9 +1,9 @@
-import baseSettings.PosFrame;
+import baseSettings.*;
 
-public class F01_Login extends PosFrame {
-	
+public class F01_Login extends PosFrame{
+
 	/*
-		ë¡œê·¸ì¸ í˜ì´ì§€
+		·Î±×ÀÎ ÆäÀÌÁö
 	*/
 	public F01_Login() {
 		super();
